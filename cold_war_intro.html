@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Cold War — A World Divided</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Special+Elite&family=Source+Sans+3:wght@300;400;600&display=swap');
+
+  :root {
+    --red: #c0392b;
+    --red-dark: #7b241c;
+    --blue: #1a3a5c;
+    --blue-light: #2980b9;
+    --gold: #d4ac0d;
+    --cream: #f5f0e8;
+    --dark: #1a1a1a;
+    --gray: #888;
+    --correct: #27ae60;
+    --wrong: #c0392b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--dark);
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* HEADER */
+  header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 20px 40px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+  }
+
+  .flag-strip {
+    display: flex;
+    gap: 3px;
+  }
+  .flag-strip.usa { justify-content: flex-start; }
+  .flag-strip.ussr { justify-content: flex-end; }
+
+  .flag-bar {
+    width: 8px;
+    height: 32px;
+    border-radius: 1px;
+  }
+  .usa .flag-bar:nth-child(odd)  { background: var(--red); }
+  .usa .flag-bar:nth-child(even) { background: white; }
+  .ussr .flag-bar { background: var(--red); }
+  .ussr .flag-bar:nth-child(3) { background: var(--gold); }
+
+  .header-center h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 0.08em;
+    text-align: center;
+    color: var(--cream);
+    line-height: 1;
+  }
+  .header-center .sub {
+    font-family: 'Special Elite', cursive;
+    font-size: 0.75rem;
+    text-align: center;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-top: 4px;
+  }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    background: rgba(255,255,255,0.08);
+    height: 4px;
+    width: 100%;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), var(--blue-light));
+    transition: width 0.5s ease;
+  }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+  }
+
+  /* SECTION CARDS */
+  .section {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* INTRO SECTION */
+  .intro-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+
+  .side {
+    padding: 28px 24px;
+    position: relative;
+  }
+  .side.usa-side  { background: rgba(26,58,92,0.6); border-right: 2px solid rgba(255,255,255,0.1); }
+  .side.ussr-side { background: rgba(127,30,22,0.5); }
+
+  .side-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+  .usa-side .side-label  { color: #6baed6; }
+  .ussr-side .side-label { color: #e88a7a; }
+
+  .side ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .side ul li {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: rgba(245,240,232,0.85);
+    padding-left: 14px;
+    position: relative;
+  }
+  .side ul li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 0.75rem;
+  }
+
+  .vs-badge {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--dark);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: var(--gold);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* DEFINITION CARDS */
+  .def-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .def-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 2px;
+    padding: 16px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .def-card:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(212,172,13,0.4);
+  }
+  .def-card.revealed { border-color: var(--gold); }
+
+  .def-term {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .def-body {
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: rgba(245,240,232,0.75);
+    display: none;
+  }
+  .def-card.revealed .def-body { display: block; }
+  .def-hint {
+    font-size: 0.75rem;
+    color: var(--gray);
+    margin-top: 6px;
+  }
+  .def-card.revealed .def-hint { display: none; }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+    margin-bottom: 28px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 6px;
+    bottom: 6px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--red), var(--blue-light));
+  }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -28px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--dark);
+    transition: transform 0.2s;
+  }
+  .tl-item:hover::before { transform: scale(1.4); }
+
+  .tl-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+  }
+  .tl-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--cream);
+    margin: 2px 0;
+  }
+  .tl-detail {
+    font-size: 0.82rem;
+    color: rgba(245,240,232,0.65);
+    line-height: 1.5;
+    display: none;
+    margin-top: 6px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.04);
+    border-left: 2px solid var(--gold);
+  }
+  .tl-item.open .tl-detail { display: block; }
+
+  /* QUIZ */
+  .quiz-q {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: var(--cream);
+    padding: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 2px;
+  }
+
+  .quiz-counter {
+    font-size: 0.78rem;
+    color: var(--gray);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .choice-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 2px;
+    padding: 13px 16px;
+    color: var(--cream);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.9rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .choice-btn:hover:not(:disabled) {
+    background: rgba(255,255,255,0.09);
+    border-color: rgba(212,172,13,0.5);
+  }
+  .choice-btn.correct { background: rgba(39,174,96,0.2); border-color: var(--correct); color: #7dcea0; }
+  .choice-btn.wrong   { background: rgba(192,57,43,0.2); border-color: var(--wrong);   color: #e8a598; }
+  .choice-btn:disabled { cursor: default; }
+
+  .feedback {
+    font-family: 'Special Elite', cursive;
+    font-size: 0.88rem;
+    padding: 12px 16px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: rgba(39,174,96,0.12); border: 1px solid rgba(39,174,96,0.3); color: #7dcea0; }
+  .feedback.wrong   { background: rgba(192,57,43,0.12); border: 1px solid rgba(192,57,43,0.3); color: #e8a598; }
+
+  .score-display {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .score-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    line-height: 1;
+    color: var(--gold);
+  }
+  .score-label {
+    font-family: 'Special Elite', cursive;
+    font-size: 1rem;
+    color: var(--gray);
+    margin-top: 8px;
+  }
+  .score-msg {
+    font-size: 0.9rem;
+    color: rgba(245,240,232,0.7);
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+    color: var(--cream);
+    margin-bottom: 6px;
+  }
+  .section-sub {
+    font-size: 0.82rem;
+    color: var(--gray);
+    margin-bottom: 22px;
+    letter-spacing: 0.05em;
+  }
+
+  /* NAV */
+  .nav-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+
+  .btn {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.1em;
+    font-size: 0.95rem;
+    padding: 10px 24px;
+    border: 1px solid;
+    border-radius: 1px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--dark);
+  }
+  .btn-primary:hover { background: #e6bb14; }
+
+  .btn-secondary {
+    background: transparent;
+    border-color: rgba(255,255,255,0.2);
+    color: var(--cream);
+  }
+  .btn-secondary:hover { border-color: rgba(255,255,255,0.5); }
+
+  .btn-next {
+    background: transparent;
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .btn-next:hover { background: rgba(212,172,13,0.1); }
+  .btn-next:disabled { opacity: 0.3; cursor: default; }
+
+  /* TAB NAV */
+  .tab-nav {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 24px;
+  }
+  .tab-btn {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.08em;
+    font-size: 0.95rem;
+    padding: 10px 18px;
+    background: transparent;
+    border: none;
+    color: var(--gray);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab-btn:hover { color: var(--cream); }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* DIVIDER */
+  .gold-rule {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 28px 0;
+    opacity: 0.4;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    header { padding: 14px 16px; }
+    .header-center h1 { font-size: 1.5rem; }
+    main { padding: 20px 16px 48px; }
+    .intro-split { grid-template-columns: 1fr; }
+    .vs-badge { display: none; }
+    .side.usa-side { border-right: none; border-bottom: 2px solid rgba(255,255,255,0.1); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="flag-strip usa">
+    <div class="flag-bar"></div><div class="flag-bar"></div><div class="flag-bar"></div>
+    <div class="flag-bar"></div><div class="flag-bar"></div>
+  </div>
+  <div class="header-center">
+    <h1>The Cold War</h1>
+    <div class="sub">A World Divided · 1945–1991</div>
+  </div>
+  <div class="flag-strip ussr">
+    <div class="flag-bar"></div><div class="flag-bar"></div><div class="flag-bar"></div>
+    <div class="flag-bar"></div><div class="flag-bar"></div>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-fill" id="progress" style="width: 33%"></div>
+</div>
+
+<main>
+  <!-- TAB NAV -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('intro')">Overview</button>
+    <button class="tab-btn" onclick="showTab('vocab')">Key Terms</button>
+    <button class="tab-btn" onclick="showTab('timeline')">Timeline</button>
+    <button class="tab-btn" onclick="showTab('quiz')">Quiz</button>
+  </div>
+
+  <!-- INTRO -->
+  <div class="section active" id="tab-intro">
+    <div class="section-title">Two Superpowers. One World.</div>
+    <div class="section-sub">After World War II, the US and USSR emerged as rival superpowers — but never fought each other directly.</div>
+
+    <div class="intro-split" style="position:relative">
+      <div class="side usa-side">
+        <div class="side-label">United States</div>
+        <ul>
+          <li>Democratic government</li>
+          <li>Capitalist economy — free markets</li>
+          <li>Led NATO alliance</li>
+          <li>Wanted to "contain" communism</li>
+          <li>Nuclear arsenal — thousands of warheads</li>
+        </ul>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="side ussr-side">
+        <div class="side-label">Soviet Union</div>
+        <ul>
+          <li>Communist, one-party state</li>
+          <li>Government-controlled economy</li>
+          <li>Led Warsaw Pact</li>
+          <li>Wanted to spread communism globally</li>
+          <li>Nuclear arsenal — matched the US</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-title" style="font-size:1.1rem; margin-bottom:10px;">Why "Cold"?</div>
+    <p style="font-size:0.9rem; line-height:1.7; color:rgba(245,240,232,0.8); margin-bottom:20px;">
+      The war was "cold" because the two superpowers never directly fought each other in open combat. Both sides had nuclear weapons — a direct war could destroy the entire planet. Instead, they competed through <strong style="color:var(--gold)">proxy wars</strong> (fighting through other countries), a <strong style="color:var(--gold)">space race</strong>, a <strong style="color:var(--gold)">nuclear arms race</strong>, espionage, and propaganda.
+    </p>
+
+    <hr class="gold-rule">
+    <div class="section-title" style="font-size:1.1rem; margin-bottom:10px;">The Iron Curtain</div>
+    <p style="font-size:0.9rem; line-height:1.7; color:rgba(245,240,232,0.8);">
+      After WWII, the Soviet Union took control of Eastern European countries, installing communist governments. Winston Churchill described this division of Europe as an <strong style="color:var(--gold)">"Iron Curtain"</strong> — an invisible barrier separating the free West from the communist East. Germany itself was split: West Germany was democratic, East Germany was communist.
+    </p>
+  </div>
+
+  <!-- VOCAB -->
+  <div class="section" id="tab-vocab">
+    <div class="section-title">Key Terms</div>
+    <div class="section-sub">Tap each card to reveal the definition.</div>
+    <div class="def-grid" id="vocab-grid"></div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="section" id="tab-timeline">
+    <div class="section-title">Key Events</div>
+    <div class="section-sub">Tap any event to learn more.</div>
+    <div class="timeline" id="timeline-list"></div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="section" id="tab-quiz">
+    <div id="quiz-area"></div>
+  </div>
+</main>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────
+const vocab = [
+  { term: "Containment", def: "The US foreign policy strategy to prevent communism from spreading to new countries. Developed by diplomat George Kennan in 1946." },
+  { term: "Iron Curtain", def: "The term Winston Churchill used to describe the division of Europe between the democratic West and the communist East after WWII." },
+  { term: "Proxy War", def: "A conflict where two major powers support opposing sides of a war in another country — fighting indirectly to avoid direct confrontation." },
+  { term: "Nuclear Deterrence", def: "The idea that both sides having nuclear weapons actually prevents war — each side fears the other's retaliation. Also called MAD: Mutually Assured Destruction." },
+  { term: "Truman Doctrine", def: "President Truman's 1947 pledge to support any country threatened by communist takeover, beginning with Greece and Turkey." },
+  { term: "Marshall Plan", def: "A US program (1948) that gave $13 billion to rebuild Western Europe after WWII — partly to prevent poverty from making communism appealing." },
+  { term: "NATO", def: "North Atlantic Treaty Organization — a military alliance of Western democratic nations formed in 1949. If one member is attacked, all members respond." },
+  { term: "Warsaw Pact", def: "The Soviet Union's answer to NATO — a military alliance of communist Eastern European countries formed in 1955." },
+  { term: "Arms Race", def: "The competition between the US and USSR to build more and better nuclear weapons, leading to tens of thousands of warheads on each side." },
+  { term: "Détente", def: "A period of relaxed tensions between the US and USSR in the 1970s, including arms control agreements and increased diplomatic contact." },
+];
+
+const timeline = [
+  { year: "1945", title: "End of WWII & Tensions Begin", detail: "The US and USSR were allies against Nazi Germany, but disagreements over postwar Europe quickly emerged at conferences in Yalta and Potsdam." },
+  { year: "1947", title: "Truman Doctrine & Marshall Plan", detail: "President Truman pledges to stop communism worldwide. The US offers $13 billion to rebuild war-torn Europe — keeping democratic governments stable." },
+  { year: "1948–49", title: "Berlin Blockade", detail: "The Soviet Union blockades West Berlin, cutting off road and rail access. The US responds with a massive airlift — flying in supplies for 11 months. The Soviets back down." },
+  { year: "1949", title: "USSR Tests Atomic Bomb", detail: "The US loses its nuclear monopoly. The arms race accelerates dramatically. Americans are shocked — many expected the Soviets to take decades to develop the bomb." },
+  { year: "1950–53", title: "Korean War", detail: "The first major 'hot' proxy war of the Cold War. Communist North Korea (backed by USSR and China) invades South Korea (backed by the US). The war ends in stalemate at the 38th parallel." },
+  { year: "1957", title: "Sputnik Launches the Space Race", detail: "The USSR launches Sputnik — the first satellite — into orbit. Americans panic: if the Soviets can put a satellite over the US, can they launch missiles too? NASA is created the following year." },
+  { year: "1961", title: "Berlin Wall Built", detail: "East Germany, backed by the Soviets, builds a wall dividing Berlin overnight. It becomes the defining symbol of the Iron Curtain — families are separated for decades." },
+  { year: "1962", title: "Cuban Missile Crisis", detail: "The closest the world came to nuclear war. The USSR placed missiles in Cuba. For 13 days, Kennedy and Khrushchev faced off. A secret deal ended the crisis: US removes missiles from Turkey, USSR removes missiles from Cuba." },
+  { year: "1969", title: "Moon Landing", detail: "The US wins the Space Race — Neil Armstrong and Buzz Aldrin walk on the moon. It's a massive propaganda victory, demonstrating the superiority of American technology and democracy." },
+  { year: "1989–91", title: "Wall Falls & USSR Collapses", detail: "The Berlin Wall falls in 1989 as communist governments collapse across Eastern Europe. In 1991, the Soviet Union itself dissolves into 15 separate countries. The Cold War is over." },
+];
+
+const questions = [
+  {
+    q: "Why is this conflict called the 'Cold' War?",
+    choices: ["It took place primarily in cold climates like Siberia", "The two superpowers never directly fought each other in open combat", "Most battles happened during winter months", "It was fought with economic sanctions only"],
+    correct: 1,
+    feedback: "Correct! Both sides had nuclear weapons — a direct war could be catastrophic for both. So they competed through proxies, espionage, and the arms race instead."
+  },
+  {
+    q: "What was the US strategy of 'containment'?",
+    choices: ["Building a wall to contain Soviet troops in Europe", "Preventing communism from spreading to new countries", "Containing nuclear weapons inside military bases", "Keeping the Cold War from becoming a hot war"],
+    correct: 1,
+    feedback: "Right! Containment, developed by diplomat George Kennan, meant stopping communism where it was — not necessarily rolling it back, but preventing it from spreading further."
+  },
+  {
+    q: "What did Winston Churchill mean by the 'Iron Curtain'?",
+    choices: ["A literal steel barrier across Germany", "Soviet nuclear missile defense systems", "The division of Europe between democratic West and communist East", "Trade restrictions between Europe and the US"],
+    correct: 2,
+    feedback: "Exactly! Churchill used this powerful image in a 1946 speech to describe how the Soviet Union had sealed off Eastern Europe from the West — politically and economically isolated."
+  },
+  {
+    q: "The Marshall Plan's main goal was to:",
+    choices: ["Build US military bases across Europe", "Rebuild Western European economies after WWII", "Create the NATO military alliance", "Develop nuclear weapons for Western Europe"],
+    correct: 1,
+    feedback: "Correct! The US gave $13 billion to rebuild Western Europe. The reasoning: poor, desperate countries might turn to communism. Prosperous democracies wouldn't."
+  },
+  {
+    q: "What happened during the Cuban Missile Crisis in 1962?",
+    choices: ["Cuba invaded Florida with Soviet support", "The US discovered Soviet nuclear missiles in Cuba", "Cuba joined the Soviet Union as a republic", "The US and USSR fought a naval battle near Cuba"],
+    correct: 1,
+    feedback: "Right! For 13 tense days, the world teetered on the edge of nuclear war. Kennedy demanded removal of the missiles. A secret deal eventually resolved the crisis."
+  },
+  {
+    q: "What is 'Mutually Assured Destruction' (MAD)?",
+    choices: ["Both sides going mad from the stress of the Cold War", "The idea that both having nukes prevents war because both sides would be destroyed", "A joint US-Soviet treaty to destroy old weapons", "The policy of matching every Soviet weapon with two American weapons"],
+    correct: 1,
+    feedback: "Exactly! MAD was the dark logic behind nuclear deterrence — if launching nukes guarantees your own destruction, no rational leader would fire first. Terrifying, but it worked."
+  },
+  {
+    q: "Why did the Soviets launch Sputnik cause alarm in the US?",
+    choices: ["Americans worried about aliens using Soviet satellites", "If the USSR could orbit a satellite over the US, it could also deliver nuclear missiles", "Sputnik was broadcasting anti-American propaganda to US radios", "The US had promised to launch the first satellite and lost prestige"],
+    correct: 1,
+    feedback: "Correct! Sputnik proved Soviet rocket technology was advanced enough to reach American territory. It triggered massive US investment in science education and NASA."
+  },
+  {
+    q: "What does a 'proxy war' mean in the context of the Cold War?",
+    choices: ["A war fought using only economic sanctions", "The US and USSR fighting each other using other countries as battlegrounds", "A simulated war game used for military training", "A secret war that was hidden from the public"],
+    correct: 1,
+    feedback: "Right! Korea, Vietnam, Angola, Afghanistan — in each case, the US and USSR backed opposing sides without directly fighting each other, using other countries as the battlefield."
+  },
+];
+
+// ─── VOCAB ───────────────────────────────────────────────────────────────
+function buildVocab() {
+  const grid = document.getElementById('vocab-grid');
+  vocab.forEach((v, i) => {
+    const card = document.createElement('div');
+    card.className = 'def-card';
+    card.innerHTML = `<div class="def-term">${v.term}</div><div class="def-body">${v.def}</div><div class="def-hint">Tap to reveal</div>`;
+    card.onclick = () => card.classList.toggle('revealed');
+    grid.appendChild(card);
+  });
+}
+
+// ─── TIMELINE ───────────────────────────────────────────────────────────
+function buildTimeline() {
+  const list = document.getElementById('timeline-list');
+  timeline.forEach(t => {
+    const item = document.createElement('div');
+    item.className = 'tl-item';
+    item.innerHTML = `<div class="tl-year">${t.year}</div><div class="tl-title">${t.title}</div><div class="tl-detail">${t.detail}</div>`;
+    item.onclick = () => item.classList.toggle('open');
+    list.appendChild(item);
+  });
+}
+
+// ─── QUIZ ────────────────────────────────────────────────────────────────
+let qIndex = 0, score = 0, answered = false;
+
+function buildQuiz() {
+  const area = document.getElementById('quiz-area');
+  if (qIndex >= questions.length) {
+    const pct = Math.round((score / questions.length) * 100);
+    let msg = pct >= 80 ? "Great work! You've got a solid grasp of Cold War basics." :
+              pct >= 60 ? "Good effort. Review the Overview and Key Terms tabs, then try again." :
+                          "Keep studying! Go back through the Overview and Timeline, then retake the quiz.";
+    area.innerHTML = `<div class="score-display">
+      <div class="score-big">${score}/${questions.length}</div>
+      <div class="score-label">${pct}% correct</div>
+      <div class="score-msg">${msg}</div>
+      <div class="nav-row" style="justify-content:center; margin-top:24px;">
+        <button class="btn btn-primary" onclick="resetQuiz()">Try Again</button>
+        <button class="btn btn-secondary" onclick="showTab('intro')">Back to Overview</button>
+      </div>
+    </div>`;
+    return;
+  }
+
+  const q = questions[qIndex];
+  answered = false;
+  area.innerHTML = `
+    <div class="quiz-counter">Question ${qIndex + 1} of ${questions.length}</div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="choices" id="choices"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="nav-row">
+      <button class="btn btn-next" id="next-btn" onclick="nextQ()" disabled>Next Question →</button>
+    </div>`;
+
+  const choices = document.getElementById('choices');
+  q.choices.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c;
+    btn.onclick = () => selectAnswer(i);
+    choices.appendChild(btn);
+  });
+}
+
+function selectAnswer(i) {
+  if (answered) return;
+  answered = true;
+  const q = questions[qIndex];
+  const btns = document.querySelectorAll('.choice-btn');
+  const fb = document.getElementById('feedback');
+  btns.forEach(b => b.disabled = true);
+  btns[i].classList.add(i === q.correct ? 'correct' : 'wrong');
+  if (i !== q.correct) btns[q.correct].classList.add('correct');
+  if (i === q.correct) score++;
+  fb.textContent = (i === q.correct ? '✓ ' : '✗ ') + q.feedback;
+  fb.className = 'feedback show ' + (i === q.correct ? 'correct' : 'wrong');
+  document.getElementById('next-btn').disabled = false;
+}
+
+function nextQ() {
+  qIndex++;
+  buildQuiz();
+}
+
+function resetQuiz() {
+  qIndex = 0; score = 0;
+  buildQuiz();
+}
+
+// ─── TABS ────────────────────────────────────────────────────────────────
+const progress = { intro: 33, vocab: 55, timeline: 77, quiz: 100 };
+
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.textContent.toLowerCase().includes(name === 'intro' ? 'over' : name)) b.classList.add('active');
+  });
+  document.getElementById('progress').style.width = progress[name] + '%';
+  if (name === 'quiz') buildQuiz();
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────
+buildVocab();
+buildTimeline();
+</script>
+</body>
+</html>
